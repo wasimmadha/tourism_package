@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 from typing import List
 
 # Declaring variable for setup function
-PROJECT_NAME="housing-predictor"
+PROJECT_NAME="packagePrediction"
 VERSION="0.0.3"
 AUTHOR="Wasim Madha"
 DESRCIPTION="Machine Learning End to End project for housing data"
