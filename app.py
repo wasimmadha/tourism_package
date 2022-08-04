@@ -57,5 +57,6 @@ def index():
         else:
             return "You won't buy our package"
 
+    return 'Done'
 if __name__ == "__main__":
     app.run()
