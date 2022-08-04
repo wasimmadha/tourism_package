@@ -104,12 +104,12 @@ class PackagePredictor:
     @classmethod
     def predict(self, X):
         try:
-            model_path = r'C:\Users\wasim\tourism_package\packagePrediction\model_dir\model.pkl'
+            model_path = r'./packagePrediction/model_dir/model.pkl'
             model = load_object(file_path=model_path)
 
             logging.info(f"Model at {model_path} is successfully loaded")
             package_prediction = model.predict(X)
-
+            logging.info(f"{model_path} exists is {package_prediction}")
             return package_prediction
         except Exception as e:
             raise PackageException(e, sys) from e
