@@ -2,6 +2,8 @@ from flask import Flask, request
 import sys
 from packagePrediction.entity import package_predictor
 from packagePrediction.exception import PackageException
+from packagePrediction.components.data_ingestion import DataIngestion
+from packagePrediction.config.configuration import Configuartion
 
 app = Flask(__name__)
 
@@ -49,7 +51,11 @@ def index():
                 MonthlyIncome = MonthlyIncome
             )
             
+            config = Configuartion()
+            data_ingestion = DataIngestion(data_ingestion_config=config.get_data_ingestion_config())
+            raw_data_dir = data_ingestion.initiate_data_ingestion()
 
+            print(raw_data_dir)
             X = person_data.get_dataframe()
 
             result = package_predictor.PackagePredictor.predict(X)
@@ -58,7 +64,8 @@ def index():
                 return "You will buy our package"
             else:
                 return "You won't buy our package"
-        return "Done"
+
+            return "Done"
     except Exception as e:
         raise PackageException(e, sys) from e
 
