@@ -39,10 +39,16 @@ class DataIngestion:
 
         logging.info(f"Data frame is created with {df.columns}")
         raw_data_dir = self.data_ingestion_config.raw_data_dir
-        logging.info(f"Raw directory is {raw_data_dir}")
+
         if os.path.exists(raw_data_dir):
             os.remove(raw_data_dir)
+        
+        logging.info(f"Raw directory is {raw_data_dir}")
 
+        
+        
+        logging.info(f"The status of raw_data_dir is {os.path.exists(raw_data_dir)}")
+        
         os.makedirs(raw_data_dir,exist_ok=True)
 
         df.to_csv(os.path.join(raw_data_dir, 'data.csv'), index=False)
@@ -68,8 +74,8 @@ class DataIngestion:
             split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
 
             for train_index,test_index in split.split(df, df["ProdTaken"]):
-                strat_train_set = df.loc[train_index].drop(["ProdTaken"],axis=1)
-                strat_test_set = df.loc[test_index].drop(["ProdTaken"],axis=1)
+                strat_train_set = df.loc[train_index]
+                strat_test_set = df.loc[test_index]
 
             train_file_path = os.path.join(self.data_ingestion_config.ingested_train_dir,
                                             file_name)
@@ -91,7 +97,7 @@ class DataIngestion:
                                 test_file_path=test_file_path,
                                 is_ingested=True,
                                 message=f"Data ingestion completed successfully."
-                                )
+                            )
             logging.info(f"Data Ingestion artifact:[{data_ingestion_artifact}]")
 
             return data_ingestion_artifact

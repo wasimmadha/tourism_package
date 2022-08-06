@@ -1,10 +1,11 @@
 from flask import Flask, request
 import sys
+from packagePrediction import pipeline
 from packagePrediction.entity import package_predictor
 from packagePrediction.exception import PackageException
 from packagePrediction.components.data_ingestion import DataIngestion
 from packagePrediction.config.configuration import Configuartion
-
+from packagePrediction.pipeline.pipeline import Pipeline
 app = Flask(__name__)
 
 @app.route('/', methods=['POST', 'GET'])
@@ -52,10 +53,10 @@ def index():
             )
             
             config = Configuartion()
-            data_ingestion = DataIngestion(data_ingestion_config=config.get_data_ingestion_config())
-            raw_data_dir = data_ingestion.initiate_data_ingestion()
+            pipeline = Pipeline(config=config)
 
-            print(raw_data_dir)
+            pipeline.run_pipeline()
+
             X = person_data.get_dataframe()
 
             result = package_predictor.PackagePredictor.predict(X)
