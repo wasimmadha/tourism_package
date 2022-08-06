@@ -9,3 +9,5 @@ DataTransformationConfig = namedtuple("DataTransformationConfig", ["transformed_
                                                                    "preprocessed_object_file_path"])
 
 TrainingPipelineConfig = namedtuple("TrainingPipelineConfig", ["artifact_dir"])
+
+ModelTrainerConfig = namedtuple("ModelTrainerConfig", ["trained_model_file_path","base_accuracy","model_config_file_path"])

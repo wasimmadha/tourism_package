@@ -4,11 +4,11 @@ import sys
 from packagePrediction.config.configuration import Configuartion
 from packagePrediction.exception import PackageException
 from packagePrediction.logger import logging
-from packagePrediction.entity.config_entity import DataIngestionConfig, DataValidationConfig
-from packagePrediction.entity.artifact_entity import DataIngestionArtifact, DataValidationArtifact, DataTransformationArtifact
+from packagePrediction.entity.artifact_entity import DataIngestionArtifact, DataValidationArtifact, DataTransformationArtifact, ModelTrainerArtifact
 from packagePrediction.components.data_ingestion import DataIngestion
 from packagePrediction.components.data_validation import DataValidation
 from packagePrediction.components.data_transformation import DataTransformation
+from packagePrediction.components.model_trainer import ModelTrainer
 
 class Pipeline():
     def __init__(self, config: Configuartion ) -> None:
@@ -49,6 +49,15 @@ class Pipeline():
         except Exception as e:
             raise PackageException(e, sys)
 
+    def start_model_trainer(self, data_transformation_artifact: DataTransformationArtifact) -> ModelTrainerArtifact:
+        try:
+            model_trainer = ModelTrainer(model_trainer_config=self.config.get_model_trainer_config(),
+                                         data_transformation_artifact=data_transformation_artifact
+                                         )
+            return model_trainer.initiate_model_trainer()
+        except Exception as e:
+            raise PackageException(e, sys) from e
+
     def run_pipeline(self):
         try:
             # data ingestion
@@ -59,6 +68,8 @@ class Pipeline():
                 data_ingestion_artifact=data_ingestion_artifact,
                 data_validation_artifact=data_validation_artifact
             )
+            model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
+
             logging.info("Pipeline Finished.")
         except Exception as e:
             raise PackageException(e, sys) from e
