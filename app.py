@@ -8,7 +8,15 @@ from packagePrediction.config.configuration import Configuartion
 from packagePrediction.pipeline.pipeline import Pipeline
 app = Flask(__name__)
 
-@app.route('/', methods=['POST', 'GET'])
+@app.route('/train', methods=['POST', 'GET'])
+def train():
+        config = Configuartion()
+        pipeline = Pipeline(config=config)
+
+        pipeline.run_pipeline()
+
+    
+@app.route('/predict', methods=['POST', 'GET'])
 def index():
     try:
         if request.method == 'POST':
@@ -52,11 +60,6 @@ def index():
                 MonthlyIncome = MonthlyIncome
             )
             
-            config = Configuartion()
-            pipeline = Pipeline(config=config)
-
-            pipeline.run_pipeline()
-
             X = person_data.get_dataframe()
 
             result = package_predictor.PackagePredictor.predict(X)

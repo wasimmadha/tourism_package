@@ -4,11 +4,12 @@ import sys
 from packagePrediction.config.configuration import Configuartion
 from packagePrediction.exception import PackageException
 from packagePrediction.logger import logging
-from packagePrediction.entity.artifact_entity import DataIngestionArtifact, DataValidationArtifact, DataTransformationArtifact, ModelTrainerArtifact
+from packagePrediction.entity.artifact_entity import DataIngestionArtifact, DataValidationArtifact, DataTransformationArtifact, ModelTrainerArtifact, ModelEvaluationArtifact
 from packagePrediction.components.data_ingestion import DataIngestion
 from packagePrediction.components.data_validation import DataValidation
 from packagePrediction.components.data_transformation import DataTransformation
 from packagePrediction.components.model_trainer import ModelTrainer
+from packagePrediction.components.model_evaluation import ModelEvaluation
 
 class Pipeline():
     def __init__(self, config: Configuartion ) -> None:
@@ -58,6 +59,19 @@ class Pipeline():
         except Exception as e:
             raise PackageException(e, sys) from e
 
+    def start_model_evaluation(self, data_ingestion_artifact: DataIngestionArtifact,
+                               data_validation_artifact: DataValidationArtifact,
+                               model_trainer_artifact: ModelTrainerArtifact) -> ModelEvaluationArtifact:
+        try:
+            model_eval = ModelEvaluation(
+                model_evaluation_config=self.config.get_model_evaluation_config(),
+                data_ingestion_artifact=data_ingestion_artifact,
+                data_validation_artifact=data_validation_artifact,
+                model_trainer_artifact=model_trainer_artifact)
+            return model_eval.initiate_model_evaluation()
+        except Exception as e:
+            raise PackageException(e, sys) from e
+
     def run_pipeline(self):
         try:
             # data ingestion
@@ -69,6 +83,9 @@ class Pipeline():
                 data_validation_artifact=data_validation_artifact
             )
             model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
+            model_evaluation_artifact = self.start_model_evaluation(data_ingestion_artifact=data_ingestion_artifact,
+                                                                    data_validation_artifact=data_validation_artifact,
+                                                                    model_trainer_artifact=model_trainer_artifact)
 
             logging.info("Pipeline Finished.")
         except Exception as e:
