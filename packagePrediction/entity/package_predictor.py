@@ -101,15 +101,21 @@ class PackagePredictor:
         except Exception as e:
             raise PackageException(e, sys) from e
 
-    @classmethod
+    def get_latest_model_path(self):
+        try:
+            file_name ="model.pkl"
+            latest_model_path = os.path.join(self.model_dir, file_name)
+            print(latest_model_path)
+            return latest_model_path
+        except Exception as e:
+            raise PackageException(e, sys) from e
+    
     def predict(self, X):
         try:
-            model_path = r'./packagePrediction/model_dir/model.pkl'
+            model_path = self.get_latest_model_path()
+            print(model_path)
             model = load_object(file_path=model_path)
-
-            logging.info(f"Model at {model_path} is successfully loaded")
-            package_prediction = model.predict(X)
-            logging.info(f"{model_path} exists is {package_prediction}")
-            return package_prediction
+            median_house_value = model.predict(X)
+            return median_house_value
         except Exception as e:
             raise PackageException(e, sys) from e

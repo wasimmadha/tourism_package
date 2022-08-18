@@ -8,6 +8,8 @@ from sklearn.model_selection import StratifiedShuffleSplit
 from packagePrediction.entity.config_entity import DataIngestionConfig
 from packagePrediction.entity.artifact_entity import DataIngestionArtifact
 
+from packagePrediction.util.util import ConnectDatabase
+
 from packagePrediction.logger import logging
 from packagePrediction.exception import PackageException
 
@@ -28,14 +30,8 @@ class DataIngestion:
         password="password"
         )
 
-        cursor = mydb.cursor()
-        cursor.execute("select * from tourist_package.test_df1")
-        df = pd.DataFrame(cursor.fetchall(), columns=['Age', 'TypeofContact', 'CityTier', 'DurationOfPitch', 'Occupation',
-       'Gender', 'NumberOfPersonVisiting', 'NumberOfFollowups',
-       'ProductPitched', 'PreferredPropertyStar', 'MaritalStatus',
-       'NumberOfTrips', 'Passport', 'PitchSatisfactionScore', 'OwnCar',
-       'NumberOfChildrenVisiting', 'Designation', 'MonthlyIncome',
-       'ProdTaken'])    
+        connection = ConnectDatabase()
+        df = connection.getAllData()
 
         logging.info(f"Data frame is created with {df.columns}")
         raw_data_dir = self.data_ingestion_config.raw_data_dir

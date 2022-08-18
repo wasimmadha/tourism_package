@@ -3,7 +3,9 @@ import sys
 import yaml
 import os
 import numpy as np
+import pandas as pd
 from packagePrediction.exception import PackageException
+import mysql.connector as conn
 
 def write_yaml_file(file_path:str,data:dict=None):
     """
@@ -80,3 +82,36 @@ def save_object(file_path:str,obj):
             pickle.dump(obj, file_obj)
     except Exception as e:
         raise PackageException(e,sys) from e
+
+class ConnectDatabase:
+    def __init__(self):
+        self.mydb = conn.connect(
+        host="localhost",
+        user="root",
+        password="password"
+        )
+
+        self.cursor = self.mydb.cursor()
+
+    def getAllData(self):
+        self.cursor.execute("select * from tourist_package.test_df1")
+        df = pd.DataFrame(self.cursor.fetchall(), columns=['Age', 'TypeofContact', 'CityTier', 'DurationOfPitch', 'Occupation',
+       'Gender', 'NumberOfPersonVisiting', 'NumberOfFollowups',
+       'ProductPitched', 'PreferredPropertyStar', 'MaritalStatus',
+       'NumberOfTrips', 'Passport', 'PitchSatisfactionScore', 'OwnCar',
+       'NumberOfChildrenVisiting', 'Designation', 'MonthlyIncome',
+       'ProdTaken'])    
+
+        return df
+
+    def insert_one(self, values):
+        sql = f"INSERT INTO tourist_package.test_df1 VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        # Executing the SQL command
+        self.cursor.execute(sql, values)
+
+        # Commit your changes in the database
+        self.mydb.commit()
+
+        print(self.cursor.rowcount, "record inserted.")
+
+
