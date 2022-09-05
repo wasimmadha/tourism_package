@@ -4,7 +4,7 @@ import mysql.connector as conn
 import pandas as pd
 import os
 from sklearn.model_selection import StratifiedShuffleSplit
-
+import urllib
 from packagePrediction.entity.config_entity import DataIngestionConfig
 from packagePrediction.entity.artifact_entity import DataIngestionArtifact
 
@@ -22,35 +22,27 @@ class DataIngestion:
         except Exception as e:
             raise PackageException(e,sys)
 
-    def get_raw_data(self):
+    def download_data(self) -> str:
+        try:
+            # extraction remote url to download dataset
+            download_url = self.data_ingestion_config.dataset_download_url
 
-        mydb = conn.connect(
-        host="localhost",
-        user="root",
-        password="password"
-        )
+            # folder location to download file
+            raw_data_dir = self.data_ingestion_config.raw_data_dir
 
-        connection = ConnectDatabase()
-        df = connection.getAllData()
+            os.makedirs(raw_data_dir, exist_ok=True)
 
-        logging.info(f"Data frame is created with {df.columns}")
-        raw_data_dir = self.data_ingestion_config.raw_data_dir
+            insurance_file_name = os.path.basename(download_url)
 
-        if os.path.exists(raw_data_dir):
-            os.remove(raw_data_dir)
-        
-        logging.info(f"Raw directory is {raw_data_dir}")
+            raw_file_path = os.path.join(raw_data_dir, insurance_file_name)
 
-        
-        
-        logging.info(f"The status of raw_data_dir is {os.path.exists(raw_data_dir)}")
-        
-        os.makedirs(raw_data_dir,exist_ok=True)
+            logging.info(f"Downloading file from :[{download_url}] into :[{raw_file_path}]")
+            urllib.request.urlretrieve(download_url, raw_file_path)
+            logging.info(f"File :[{raw_file_path}] has been downloaded successfully.")
+            return raw_file_path
 
-        df.to_csv(os.path.join(raw_data_dir, 'data.csv'), index=False)
-
-        logging.info(f"Data frame stored")
-        return raw_data_dir
+        except Exception as e:
+            raise PackageException(e, sys) from e
 
     def split_data_as_train_test(self) -> DataIngestionArtifact:
         try:
@@ -104,7 +96,7 @@ class DataIngestion:
 
     def initiate_data_ingestion(self)-> DataIngestionArtifact:
         try:
-            self.get_raw_data()
+            raw_file_path = self.download_data()
             return self.split_data_as_train_test()
         except Exception as e:
             raise PackageException(e,sys) from e

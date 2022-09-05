@@ -1,8 +1,9 @@
 training_pipeline_config:
-  pipeline_name: package
+  pipeline_name: packagePrediction
   artifact_dir: artifact
 
 data_ingestion_config:
+  dataset_download_url: https://raw.githubusercontent.com/wasimmadha/Datasets/master/Travel.csv
   raw_data_dir: raw_data
   ingested_dir: ingested_data
   ingested_train_dir: train

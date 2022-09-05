@@ -1,13 +1,8 @@
-import numpy as np
-import pandas as pd
+from packagePrediction.config.configuration import Configuartion
+from packagePrediction.pipeline.pipeline import Pipeline
+from packagePrediction.constant import CONFIG_DIR
 
-np.random.seed(20)
-df= pd.DataFrame(np.random.randn(10,4), index=pd.date_range("2021-07-18", periods=10), columns=["a","b","c","d"])
+config = Configuartion()
+pipeline = Pipeline(config=config)
 
-df['date_new'] = pd.date_range("2021-07-18", periods=10)
-df['date_new']= df['date_new'].apply(pd.to_datetime)
-
-df['date_new'] = pd.to_datetime(df['date_new'], errors='coerce')
-
-
-print(df.info())
+pipeline.run_pipeline()

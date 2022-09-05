@@ -2,9 +2,11 @@ import sys
 import pandas as pd
 import numpy as np
 import os
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
 
-from sklearn.compose import make_column_transformer
 from packagePrediction.logger import logging
 from packagePrediction.exception import PackageException
 from packagePrediction.entity.config_entity import DataTransformationConfig
@@ -25,9 +27,9 @@ class DataTransformation:
         except Exception as e:
             raise PackageException(e,sys) from e
 
-    def get_data_transformer_object(self)->make_column_transformer:
+    def get_data_transformer_object(self)->ColumnTransformer:
         try:
-            numerical_columns = ['Age', 'TypeofContact', 'CityTier',
+            numerical_columns = ['Age', 'CityTier',
                             'DurationOfPitch', 'NumberOfPersonVisiting',
                             'NumberOfFollowups', 'PreferredPropertyStar',
                             'NumberOfTrips', 'Passport', 'PitchSatisfactionScore',
@@ -35,13 +37,26 @@ class DataTransformation:
             categorical_columns = ['TypeofContact', 'Occupation', 'Gender', 'ProductPitched',
                  'MaritalStatus', 'Designation']
 
-            numeric_transformer = StandardScaler()
-            oh_transformer = OneHotEncoder()
-
-            preprocessor = make_column_transformer(
-                (numeric_transformer, numerical_columns),
-                (oh_transformer, categorical_columns)
+            num_pipeline = Pipeline(steps=[
+                ('imputer', SimpleImputer(strategy='median')),
+                ('scaler', StandardScaler())
+            ]
             )
+
+            cat_pipeline = Pipeline(steps=[
+                ('imputer', SimpleImputer(strategy='most_frequent')),
+                ('one_hot_encoder', OneHotEncoder()),
+                ('scaler', StandardScaler(with_mean=False))
+            ]
+            )
+
+            logging.info(f"Categorical columns: {categorical_columns}")
+            logging.info(f"Numerical columns: {numerical_columns}")
+
+            preprocessor = ColumnTransformer([
+                ('num_pipeline', num_pipeline, numerical_columns),
+                ('cat_pipeline', cat_pipeline, categorical_columns),
+            ])
 
             logging.info(f"Categorical columns: {categorical_columns}")
             logging.info(f"Numerical columns: {numerical_columns}")

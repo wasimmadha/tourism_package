@@ -1,0 +1,5 @@
+best_model:
+  model_path: C:\Users\wasim\tourism_package\packagePrediction\artifact\model_trainer\2022-09-05-17-13-23\trained_model\model.pkl
+history:
+  2022-09-05-17-13-23:
+    model_path: C:\Users\wasim\tourism_package\packagePrediction\artifact\model_trainer\2022-09-05-17-11-58\trained_model\model.pkl
