@@ -1,4 +1,4 @@
-# 🚗 Tourism Package Prediction
+# Tourism Package Prediction
 ### [Heroku Deployment link](https://usedcar-prediction-ineuron.herokuapp.com/)
 
 This project aims to solve the problem of predicting the customer with buy the package or not , using Sklearn's supervised machine learning techniques. It is a classification problem and predictions are carried out on dataset of used car sales in the Indian car market Cardheko website. Several regression techniques have been studied, including XGboost and Random forests of decision trees.
@@ -42,7 +42,7 @@ Flask
 
 * Any modification has to be done in  Inside Config.yaml which can be done in route **/update_model_config**
 
-## `tourismPackage` is the main package folder which contains 
+## `packagePrediction` is the main package folder which contains 
 
 **Artifact** : Stores all artifacts created from running the application
 
@@ -53,6 +53,36 @@ Flask
 - ModelTrainer
 - ModelEvaluation
 - ModelPusher
+
+**Routes for An API**:
+```
+/train
+```
+  * Retrained the model
+
+```
+/predict
+```
+*Parameters*: 
+  Age 
+  TypeofContact 
+  CityTier 
+  DurationOfPitch 
+  Occupation 
+  Gender 
+  NumberOfPersonVisiting 
+  NumberOfFollowups ProductPitched 
+  PreferredPropertyStar
+  MaritalStatus 
+  NumberOfTrips 
+  Passport 
+  PitchSatisfactionScore OwnCar 
+  NumberOfChildrenVisiting 
+  Designation 
+  MonthlyIncome 
+
+
+
 
 **Custom Logger and Exceptions** are used in the Project for better debugging purposes.
 
