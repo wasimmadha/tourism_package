@@ -1,5 +1,4 @@
 # Tourism Package Prediction
-### [Heroku Deployment link](https://usedcar-prediction-ineuron.herokuapp.com/)
 
 This project aims to solve the problem of predicting the customer with buy the package or not , using Sklearn's supervised machine learning techniques. It is a classification problem and predictions are carried out on dataset, Several regression techniques have been studied, including XGboost and Random forests of decision trees.
 
