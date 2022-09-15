@@ -64,22 +64,22 @@ Flask
 /predict
 ```
 *Parameters*: 
-  Age 
-  TypeofContact 
-  CityTier 
-  DurationOfPitch 
-  Occupation 
-  Gender 
-  NumberOfPersonVisiting 
-  NumberOfFollowups ProductPitched 
-  PreferredPropertyStar
-  MaritalStatus 
-  NumberOfTrips 
-  Passport 
-  PitchSatisfactionScore OwnCar 
-  NumberOfChildrenVisiting 
-  Designation 
-  MonthlyIncome 
+  * Age
+  * TypeofContact 
+  * CityTier 
+  * DurationOfPitch 
+  * Occupation 
+  * Gender 
+  * NumberOfPersonVisiting 
+  * NumberOfFollowups ProductPitched 
+  * PreferredPropertyStar
+  * MaritalStatus 
+  * NumberOfTrips 
+  * Passport 
+  * PitchSatisfactionScore OwnCar 
+  * NumberOfChildrenVisiting 
+  * Designation 
+  * MonthlyIncome 
 
 
 
